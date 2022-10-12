@@ -67,7 +67,12 @@ jobs:
           bazel --output_user_root=~/.cache/bazel build //:App
       - name: Test Rust
         run: |
-          bazel test //rust/... 
+          bazel test //rust/...
+      - name: Clean up keychain and provisioning profile
+        if: ${{ always() }}
+        run: |
+          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
+          rm ~/Library/MobileDevice/Provisioning\ Profiles/build_pp.mobileprovision
   Deploy:
     runs-on: ubuntu-latest
     needs: [Build]
