@@ -1,2 +1,2 @@
 # cense
-Personal Financial Aggregator
+Decentralized Personal Financial Aggregator
