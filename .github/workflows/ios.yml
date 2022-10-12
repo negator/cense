@@ -80,12 +80,12 @@ jobs:
           popd
       - name: Build App
         run: |
-          bazel build -s //:App
+          bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
           FILE=$(bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App)
           cp $FILE ./cense.ipa          
       - name: Test Rust
         run: |
-          bazel test  --apple_platform_type=ios --ios_multi_cpus=x86_64 //rust/...
+          bazel test  --apple_platform_type=ios --ios_multi_cpus=arm64 //rust/...
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v3.1.0
         with:
