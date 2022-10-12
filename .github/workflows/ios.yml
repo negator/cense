@@ -66,7 +66,9 @@ jobs:
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ runner.os }}-${{ env.version }}-bazel-cache      
+          key: ${{ runner.os }}-${{ env.version }}-bazel-cache-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.version }}-bazel-cache
       - name: Mount Pods cache
         id: pods-cache
         uses: actions/cache@v3.0.8
@@ -84,7 +86,7 @@ jobs:
       - name: Build App
         run: |
           bazel --output_user_root=~/.cache/bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
-          FILE=$(bazel --output_user_root=~/.cache/bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App --ios_multi_cpus=arm64  --platforms=//rust:arm64-apple-ios)
+          FILE=$(bazel --output_user_root=~/.cache/bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App --apple_platform_type=ios --ios_multi_cpus=arm64)
           cp $FILE ./cense.ipa          
       - name: Test Rust
         run: |
