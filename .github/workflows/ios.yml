@@ -87,37 +87,7 @@ jobs:
         with:
           name: "App"
           path: ./cense.ipa
-          retention-days: 1          
-      - name: Mount bazel cache
-        uses: actions/cache@v3.0.8
-        with:
-          path: |
-            "~/.cache/bazel"            
-          key: ${{ runner.os }}-cinch      
-      - name: Mount Pods cache
-        uses: actions/cache@v3.0.8
-        with:
-          path: |
-            "cinch/Pods"
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-      - name: Install Pods
-        run: |
-          gem install cocoapods-bazel
-          pushd cinch          
-          pod install
-          popd
-      - name: Build App
-        run: |
-          bazel --output_user_root=~/.cache/bazel build //:App
-      - name: Test Rust
-        run: |
-          bazel test //rust/...
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          name: "App"
-          path: ./cense.ipa
-          retention-days: 1          
+          retention-days: 1    
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
         run: |
