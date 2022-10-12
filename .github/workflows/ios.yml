@@ -1,10 +1,7 @@
 name: iOS Build
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  repository_dispatch
 
 jobs:
   Build:    
@@ -43,7 +40,54 @@ jobs:
 
           # apply provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles      
+          cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
+      - name: Checkout actions/cache@v3
+        uses: actions/checkout@v3
+        with:
+          repository: actions/cache
+          ref: v3
+          path: ./.tmp/actions/cache
+      - name: Make actions/cache@v3 run always, not only when job succeeds
+        # Tweak `action.yml` of `actions/cache@v3` to remove its `post-if`
+        # condition, making it default to `post-if: always()`.
+        run: |
+          sed -i -e '/ post-if: /d' ./.tmp/actions/cache/action.yml          
+      - name: Bazel cache
+        if: always()
+        id: bazel-cache
+        uses: ./.tmp/actions/cache
+        env:
+          version: 5.3.1
+        with:
+          path: |
+            ~/.cache/bazel
+          key: ${{ runner.os }}-${{ env.version }}-bazel-cache      
+      - name: Mount Pods cache
+        uses: actions/cache@v3.0.8
+        with:
+          path: |
+            cinch/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('Podfile') }}
+      - name: Install Pods
+        run: |
+          gem install cocoapods-bazel
+          pushd cinch          
+          pod install
+          popd
+      - name: Build App
+        run: |
+          bazel build -s //:App
+          FILE=$(bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App)
+          cp $FILE ./cense.ipa          
+      - name: Test Rust
+        run: |
+          bazel test  --apple_platform_type=ios --ios_multi_cpus=x86_64 //rust/...
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: "App"
+          path: ./cense.ipa
+          retention-days: 1          
       - name: Mount bazel cache
         uses: actions/cache@v3.0.8
         with:
@@ -68,6 +112,12 @@ jobs:
       - name: Test Rust
         run: |
           bazel test //rust/...
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: "App"
+          path: ./cense.ipa
+          retention-days: 1          
       - name: Clean up keychain and provisioning profile
         if: ${{ always() }}
         run: |
