@@ -11,6 +11,16 @@ jobs:
     runs-on: macos-latest  
     steps:
       - uses: actions/checkout@v2
+      - name: Setup Credentials
+        run: |
+          mkdir -p ~/.ssh
+          touch ~/.ssh/id_rsa
+          echo "${{ secrets.CINCH_PRIV_KEY }}" > ~/.ssh/id_rsa
+          sudo chmod 600 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
+          git config --global --list      
       - name: Checkout Cinch
         uses: actions/checkout@v3
         with:
