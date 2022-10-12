@@ -84,7 +84,7 @@ jobs:
       - name: Build App
         run: |
           bazel --output_user_root=~/.cache/bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
-          FILE=$(bazel --output_user_root=~/.cache/bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App)
+          FILE=$(bazel --output_user_root=~/.cache/bazel cquery --output starlark --starlark:expr '"\n".join([f.path for f in target.files.to_list()])' //:App --platforms=//rust:arm64-apple-ios)
           cp $FILE ./cense.ipa          
       - name: Test Rust
         run: |
