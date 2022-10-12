@@ -68,3 +68,20 @@ jobs:
       - name: Test Rust
         run: |
           bazel test //rust/... 
+  Deploy:
+    runs-on: ubuntu-latest
+    needs: [Build]
+    steps:
+      - name: Download Build Artifact
+        uses: actions/download-artifact@v3.0.0
+        with:
+          name: "App"
+      - name: Setup Environment Vars
+        run: |
+          echo "FIREBASE_TOKEN=${{secrets.FIREBASE_TOKEN}}" >> $GITHUB_ENV
+          pwd
+          ls -larth ./
+      - name: Upload to Firebase App Distribution
+        uses: w9jds/firebase-action@master
+        with:
+          args: appdistribution:distribute $GITHUB_WORKSPACE/cense.ipa --app ${{secrets.FIREBASE_APP_ID}} --groups naveen --release-notes "$GITHUB_REF_NAME"
