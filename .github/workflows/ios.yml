@@ -66,9 +66,9 @@ jobs:
         with:
           path: |
             ~/.cache/bazel
-          key: ${{ runner.os }}-${{ env.version }}-bazel-cache-${{ github.run_id }}
+          key: ${{ runner.os }}-${{ env.version }}-bazel-cache-${{ github.ref_name }}
           restore-keys: |
-            ${{ runner.os }}-${{ env.version }}-bazel-cache
+            ${{ runner.os }}-${{ env.version }}-bazel-cache-3236749821
       - name: Mount Pods cache
         id: pods-cache
         uses: actions/cache@v3.0.8
