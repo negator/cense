@@ -74,15 +74,13 @@ jobs:
         uses: actions/cache@v3.0.8
         with:
           path: |
-            cinch/Pods
+            Pods
           key: ${{ runner.os }}-pods-${{ hashFiles('Podfile') }}
       - name: Install Pods
         if: steps.pods-cache.outputs.cache-hit != 'true'
         run: |
           gem install cocoapods-bazel
-          pushd cinch          
           pod install
-          popd
       - name: Build App
         run: |
           bazel --output_user_root=~/.cache/bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
