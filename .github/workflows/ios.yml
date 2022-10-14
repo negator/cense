@@ -16,7 +16,7 @@ jobs:
           PAYLOAD_REF="${{ github.event.client_payload.ref_name }}"
           CINCH_BRANCH="${PAYLOAD_REF:=master}"
           echo "Building cinch branch: $CINCH_BRANCH"
-          echo "{cinch_branch}={$CINCH_BRANCH}" >> $GITHUB_ENV
+          echo "cinch_branch=$CINCH_BRANCH" >> $GITHUB_ENV
       - name: Checkout Cinch
         uses: actions/checkout@v3
         with:
