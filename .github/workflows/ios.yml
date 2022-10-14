@@ -13,15 +13,17 @@ jobs:
     steps:
       - name: Set Branch Name
         run: |
-          PAYLOAD_REF="${{ github.event.client_payload.ref_name }}"
-          CINCH_BRANCH="${PAYLOAD_REF:=master}"
-          echo "Building cinch branch: $CINCH_BRANCH"
-          echo "cinch_branch=$CINCH_BRANCH" >> $GITHUB_ENV
+          CINCH_REF="${{ github.event.client_payload.ref }}"
+          PAYLOAD_REF_NAME="${{ github.event.client_payload.ref_name }}"
+          CINCH_REF_NAME="${PAYLOAD_REF_NAME:=master}"
+          echo "Building cinch branch: $CINCH_REF_NAME at $CINCH_REF"
+          echo "cinch_ref=$CINCH_REF" >> $GITHUB_ENV
+          echo "cinch_ref_name=$CINCH_REF_NAME" >> $GITHUB_ENV          
       - name: Checkout Cinch
         uses: actions/checkout@v3
         with:
           repository: negator/cinch
-          ref: ${{ env.cinch_branch }}
+          ref: ${{ env.cinch_ref }}
           token: ${{ secrets.CINCH_PERSONAL_ACCESS_TOKEN }}
       - name: Install the Apple certificate and provisioning profile
         env:
