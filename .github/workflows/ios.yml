@@ -81,6 +81,8 @@ jobs:
         run: |
           gem install cocoapods-bazel
           pod install
+      - name: Set Build Number
+        run: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}"
       - name: Build App
         run: |
           bazel --output_user_root=~/.cache/bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
@@ -117,4 +119,4 @@ jobs:
       - name: Upload to Firebase App Distribution
         uses: w9jds/firebase-action@master
         with:
-          args: appdistribution:distribute $GITHUB_WORKSPACE/cense.ipa --app ${{secrets.FIREBASE_APP_ID}} --groups naveen --release-notes "$GITHUB_REF_NAME"
+          args: appdistribution:distribute $GITHUB_WORKSPACE/cense.ipa --app ${{secrets.FIREBASE_APP_ID}} --groups naveen --release-notes "${{ github.event.client_payload.message }}"
