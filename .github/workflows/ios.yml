@@ -121,4 +121,4 @@ jobs:
       - name: Upload to Firebase App Distribution
         uses: w9jds/firebase-action@master
         with:
-          args: appdistribution:distribute $GITHUB_WORKSPACE/cense.ipa --app ${{secrets.FIREBASE_APP_ID}} --groups naveen --release-notes "${{ github.event.client_payload.message }}"
+          args: appdistribution:distribute $GITHUB_WORKSPACE/cense.ipa --app ${{secrets.FIREBASE_APP_ID}} --groups naveen
