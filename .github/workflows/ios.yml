@@ -82,7 +82,7 @@ jobs:
           gem install cocoapods-bazel
           pod install
       - name: Set Build Number
-        run: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}"
+        run: /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${{ github.run_number }}" cinch/Info.plist
       - name: Build App
         run: |
           bazel --output_user_root=~/.cache/bazel build -s --apple_platform_type=ios --ios_multi_cpus=arm64 //:App
