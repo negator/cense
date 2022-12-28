@@ -80,7 +80,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ env.version }}-bazel-cache-${{ github.ref_name }}
             ${{ runner.os }}-${{ env.version }}-bazel-cache-main            
-            ${{ runner.os }}-${{ env.version }}-bazel-cache-3790534617
+            ${{ runner.os }}-${{ env.version }}-bazel-cache-3790602639
       - name: Mount Pods cache
         id: pods-cache
         uses: actions/cache@v3.0.8
