@@ -9,7 +9,7 @@ on:
 
 jobs:
   Build:    
-    runs-on: macos-13  
+    runs-on: macos-latest  
     steps:
       - name: Set Branch Name
         run: |
