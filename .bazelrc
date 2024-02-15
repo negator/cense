@@ -1,4 +1,4 @@
 
 startup --output_user_root=~/.cache/bazel
 
-build --apple_platform_type=ios --ios_multi_cpus=arm64
+build --apple_platform_type=ios --ios_multi_cpus=arm64 --macos_minimum_os=12.0 --host_macos_minimum_os=12.0
