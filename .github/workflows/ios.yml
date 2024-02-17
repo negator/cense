@@ -124,7 +124,7 @@ jobs:
           name: "App"
       - name: Setup Environment Vars
         run: |
-          echo "FIREBASE_TOKEN=${{secrets.FIREBASE_TOKEN}}" >> $GITHUB_ENV
+          echo "GCP_SA_KEY=${{secrets.GCP_SA_KEY}}" >> $GITHUB_ENV
           pwd
           ls -larth ./
       - name: Upload to Firebase App Distribution
